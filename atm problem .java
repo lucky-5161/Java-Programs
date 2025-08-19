@@ -1,53 +1,84 @@
 import java.util.Scanner;
-class Main {
- public static void main(String[] args) {
- Scanner sc=new Scanner(System.in);
- int originalpwd=2004;
- for(int i=1;i<=3;i++){
- System.out.print("Enter your current password:");
- int currentpwd=sc.nextInt();
- if(originalpwd==currentpwd){
- int balance=0;
- while(true){
- System.out.println("welcome to SBI ATM");
- System.out.print(" 1) Check Balance\n 2) Deposit\n 3) WithDrawl\n 4) Exit\n ");
- System.out.print("Enter your choice :");
- int choice=sc.nextInt();
- switch(choice){
- case 1:
- System.out.println("your bank balance:" + balance);
- break;
- case 2:
- System.out.print("Deposit your amount :");
- float deposit=sc.nextFloat();
- balance+=deposit;
- break;
- case 3:
- System.out.print("Enter the withdrawal amount :");
- float withdrawl=sc.nextFloat();
- balance-=withdrawl;
- break;
- case 4:
- System.out.print("Thank you for choosing us visit again");
- break;
- default:
- System.out.print("Please enter the valid choice");
- 
- }
- if(choice==4){
- break;
- }
- }
- break;
- }
- else{
- if(i != 3){
- System.out.println("You had entered wrong pwd "+ i+" attempt");
- }
- else{
- System.out.print("Timed out.You can try after 24hrs");
- }
- }
- }
- }
+
+class ATM {
+    private double balance;
+    private String pin;
+    public ATM(String pin, double balance) {
+        this.pin = pin;
+        this.balance = balance;
+    }
+
+    public boolean verifyPin(String Pin) {
+        return this.pin.equals(Pin);
+    }
+
+    public void checkBalance() {
+        System.out.println("Your current balance: ₹" + this.balance);
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            System.out.println("Successfully deposited ₹" + amount);
+            checkBalance();
+        } else {
+            System.out.println("Invalid deposit amount!");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+            System.out.println("Successfully withdrawn ₹" + amount);
+            checkBalance();
+        } else {
+            System.out.println("Insufficient balance or invalid amount!");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ATM myATM = new ATM("1234", 5000.0); 
+
+        System.out.print("Enter PIN: ");
+        String enteredPin = sc.nextLine();
+
+        if (myATM.verifyPin(enteredPin)) {
+            System.out.println("PIN Verified!");
+
+            while (true) {
+                System.out.println("\n--- ATM Menu ---");
+                System.out.println("1. Check Balance");
+                System.out.println("2. Deposit");
+                System.out.println("3. Withdraw");
+                System.out.println("4. Exit");
+                System.out.print("Choose an option: ");
+                int choice = sc.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        myATM.checkBalance();
+                        break;
+                    case 2:
+                        System.out.print("Enter amount to deposit: ");
+                        double dep = sc.nextDouble();
+                        myATM.deposit(dep);
+                        break;
+                    case 3:
+                        System.out.print("Enter amount to withdraw: ");
+                        double wit = sc.nextDouble();
+                        myATM.withdraw(wit);
+                        break;
+                    case 4:
+                        System.out.println("Thank you for using ATM!");
+                        sc.close();
+                        return;
+                    default:
+                        System.out.println("Invalid option! Try again.");
+                }
+            }
+        } else {
+            System.out.println("Incorrect PIN! Access denied.");
+        }
+    }
 }
